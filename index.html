@@ -12,8 +12,9 @@
 <body>
     <h1>Battery Management System</h1>
     <div class="d-flex">
-        <button class="btn start-btn" onclick="startOptimizedCharging()">Start Charging</button>
-        <button class="btn stop-btn" onclick="endCharge()">Stop Charging</button>
+        <button class="btn start-btn" onclick="enableCharging()">Start Charging</button>
+        <button class="btn stop-btn" onclick="disableCharging()">Stop Charging</button>
+        <button class="btn btn-warning" onclick="dischargeBattery()">Discharge Battery</button>
     </div>
     <div id="output" class="text-center"></div>
     <script src="app.js"></script>
