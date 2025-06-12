@@ -1,0 +1,34 @@
+ body {
+      background-color: #f0f8ff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+    }
+
+    #output {
+      width: 90%;
+      max-width: 600px;
+      margin-top: 20px;
+      background-color: #ffffff;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      padding: 15px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      text-align: left;
+    }
+
+    button {
+      margin: 5px;
+    }
+
+    .btn  {
+  border-radius: 0.5rem !important;
+  border: 1px solid #000 !important;
+  padding: 0.2rem 0.75rem !important;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.6);
+  background-color: #fff !important;
+  color: #000 !important;
+}
