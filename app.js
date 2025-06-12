@@ -1,12 +1,11 @@
 const BASE_URL = "http://127.0.0.1:5000";
 const output = document.getElementById("output");
 
-// Utility to print to output
 function log(msg) {
   output.innerHTML += `<p>${msg}</p>`;
 }
 
-// Fetch simulation info (battery status, consumption)
+// Fetch simulation info
 async function getInfo() {
   try {
     const response = await fetch(`${BASE_URL}/info`);
@@ -41,20 +40,20 @@ async function getPricePerHour() {
 }
 
 // Start charging
-async function startCharging() {
+async function startToCharge() {
   await fetch(`${BASE_URL}/charge`, { method: "POST" });
-  log("Charging started.");
+  log("Charging started...");
 }
 
 // Stop charging
-async function stopCharging() {
+async function endCharge() {
   await fetch(`${BASE_URL}/charge`, { method: "DELETE" });
-  log("Charging stopped.");
+  log("Charging stopped");
 }
 
-// Optimize charging: choose hours where usage + 7.4kW < 11kW and lowest price or consumption
+// Start OTP
 async function startOptimizedCharging() {
-  log("Fetching data...");
+  log("loading battery info...");
   const [info, baseLoad, prices] = await Promise.all([
     getInfo(),
     getBaseLoad(),
@@ -66,9 +65,9 @@ async function startOptimizedCharging() {
     const currentPercent = info.battery_percent;
     const targetKWh = (80 - currentPercent) / 100 * batteryCapacity;
 
-  log(`Battery at ${currentPercent.toFixed(1)}%. Need to charge ${targetKWh.toFixed(2)} kWh`);
+  log(`Battery: ${currentPercent.toFixed(1)}% - Charge Needed: ${targetKWh.toFixed(2)} kWh`);
 
-  // Calculate hours where it's safe to charge (consumption < 3.6kW)
+  // Calculate hours safe to charge (consumption < 3.6kW)
   let hours = [];
   for (let i = 0; i < baseLoad.length; i++) {
     const totalLoadIfCharging = baseLoad[i] + 7.4;
@@ -81,26 +80,24 @@ async function startOptimizedCharging() {
     }
   }
 
-  // Sort by lowest price (Subtask 2)
   hours.sort((a, b) => a.price - b.price);
 
-  // Calculate how many hours needed to charge to 80%
   const hoursNeeded = Math.ceil(targetKWh / 7.4);
   const selectedHours = hours.slice(0, hoursNeeded);
 
   log(`Selected charging hours: ${selectedHours.map(h => h.hour).join(", ")}`);
 
-  // Simulate time 
+  // Simulation
   for (let i = 0; i < 24; i++) {
     if (selectedHours.find(h => h.hour === i)) {
-      await startCharging();
-      log(`Hour ${i}: Charging...`);
-      await new Promise(r => setTimeout(r, 1000)); // simulate delay
-      await stopCharging();
+      await startToCharge();
+      log(`${i}:00 - Charging...`);
+      await new Promise(r => setTimeout(r, 1000));
+      await endCharge();
     } else {
-      log(`Hour ${i}: Not charging.`);
+      log(`${i}:00 - Not charging.`);
     }
   }
 
-  log("Charging schedule complete.");
+  log("Charging complete... battery full :)");
 }
