@@ -29,7 +29,6 @@ async function getInfo() {
   }
 }
 
-
 // Fetch hourly household consumption
 async function getBaseLoad() {
   const res = await fetch(`${BASE_URL}/baseload`);
